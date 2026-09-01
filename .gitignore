@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# SQLite database
+database/security.db
+
+# User Uploads (keep directory structure with .gitkeep)
+uploads/encrypted_files/*
+!uploads/encrypted_files/.gitkeep
+uploads/decrypted_files/*
+!uploads/decrypted_files/.gitkeep
+uploads/keys/*
+!uploads/keys/.gitkeep
+
+# IDE & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

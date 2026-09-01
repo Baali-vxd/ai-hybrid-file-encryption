@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hybrid File Encryption & Threat Detection System</title>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for Telemetry Dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Dark Cybersecurity Stylesheet -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <div class="app-container">
+
+        <!-- Sidebar Navigation (Shown when logged in) -->
+        <aside class="sidebar" id="sidebar" style="display: none;">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div>
+                    <div class="brand-title">CYBERVAULT</div>
+                    <div class="brand-subtitle">AI HYBRID ENCRYPTION</div>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <button id="navDashboard" class="active" onclick="switchView('dashboard')">
+                        <i class="fa-solid fa-chart-line"></i> Dashboard
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button id="navEncrypt" onclick="switchView('encrypt')">
+                        <i class="fa-solid fa-lock"></i> Encrypt File
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button id="navDecrypt" onclick="switchView('decrypt')">
+                        <i class="fa-solid fa-unlock-keyhole"></i> Decrypt File
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button id="navThreat" onclick="switchView('threat')">
+                        <i class="fa-solid fa-brain"></i> AI Threat Detection
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button id="navLogs" onclick="switchView('logs')">
+                        <i class="fa-solid fa-shield-virus"></i> Security Logs
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button id="navInfo" onclick="switchView('info')">
+                        <i class="fa-solid fa-circle-info"></i> CNS Project Info
+                    </button>
+                </li>
+            </ul>
+
+            <div class="user-profile-bar">
+                <div class="user-info">
+                    <span class="user-name" id="displayUsername">User</span>
+                    <span class="user-badge" id="displayUserRole">SECURE AUTH</span>
+                </div>
+                <button class="btn-cyber-outline" style="padding: 0.4rem 0.6rem;" onclick="logout()" title="Logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+
+            <!-- Top Header (Hidden on Landing/Auth views) -->
+            <header class="top-header" id="topHeader" style="display: none;">
+                <div class="page-title" id="pageTitle">
+                    <i class="fa-solid fa-chart-line"></i> Security Dashboard
+                </div>
+                <div class="header-status-badge">
+                    <div class="pulse-dot"></div>
+                    <span>AI Isolation Forest: <strong id="headerAiStatus">NORMAL</strong></span>
+                </div>
+            </header>
+
+            <!-- 1. LANDING VIEW -->
+            <section id="viewLanding" class="view-section active-view">
+                <div style="text-align: center; max-width: 900px; margin: 2rem auto;">
+                    <div style="display: inline-block; padding: 0.4rem 1.2rem; background: rgba(0, 242, 254, 0.1); border: 1px solid var(--accent-cyan); border-radius: 20px; color: var(--accent-cyan); font-family: var(--font-mono); font-size: 0.85rem; margin-bottom: 1.5rem;">
+                        COMPUTER NETWORKS & SECURITY (CNS) MINI PROJECT
+                    </div>
+                    <h1 style="font-size: 2.6rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; background: linear-gradient(to right, #ffffff, var(--accent-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                        AI-Enabled Hybrid File Encryption and Intelligent Threat Detection System
+                    </h1>
+                    <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2.5rem; line-height: 1.6;">
+                        A next-generation security architecture combining symmetric <strong>AES-256</strong> file encryption, asymmetric <strong>RSA-2048</strong> key protection, <strong>SHA-256</strong> integrity hashing, and real-time <strong>Scikit-Learn Isolation Forest</strong> anomaly detection.
+                    </p>
+
+                    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;">
+                        <button class="btn-cyber" onclick="showAuthView('login')">
+                            <i class="fa-solid fa-shield"></i> Access System Portal
+                        </button>
+                        <button class="btn-cyber-outline" onclick="showAuthView('register')">
+                            <i class="fa-solid fa-user-plus"></i> Register Account
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hybrid Encryption Workflow Diagram -->
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fa-solid fa-diagram-project"></i> Hybrid Cryptography & Threat Detection Workflow</div>
+                    </div>
+                    <div class="workflow-container">
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-user-shield"></i></div>
+                            <div class="wf-label">Authenticated User</div>
+                        </div>
+                        <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-brain"></i></div>
+                            <div class="wf-label">AI Security Check</div>
+                        </div>
+                        <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-key"></i></div>
+                            <div class="wf-label">AES-256 Encryption</div>
+                        </div>
+                        <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                            <div class="wf-label">SHA-256 Hash</div>
+                        </div>
+                        <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-lock"></i></div>
+                            <div class="wf-label">RSA-2048 Key Envelope</div>
+                        </div>
+                        <div class="wf-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+                        <div class="wf-step">
+                            <div class="wf-icon"><i class="fa-solid fa-database"></i></div>
+                            <div class="wf-label">Secure Storage</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Technical Features Grid -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                    <div class="cyber-card">
+                        <div class="card-title"><i class="fa-solid fa-key"></i> Hybrid Cryptography</div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">
+                            Combines high-speed <strong>AES-256</strong> symmetric cipher for bulk data with <strong>RSA-2048</strong> asymmetric key wrapping to eliminate secret key exchange vulnerabilities.
+                        </p>
+                    </div>
+                    <div class="cyber-card">
+                        <div class="card-title"><i class="fa-solid fa-fingerprint"></i> SHA-256 Integrity Verification</div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">
+                            Calculates cryptographic checksums before encryption and after decryption to instantly detect data tampering or corruption (<code>✅ FILE INTEGRITY VERIFIED</code>).
+                        </p>
+                    </div>
+                    <div class="cyber-card">
+                        <div class="card-title"><i class="fa-solid fa-robot"></i> Machine Learning Threat Radar</div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.75rem;">
+                            Powered by <strong>Scikit-Learn Isolation Forest</strong> algorithm to detect abnormal access frequencies, brute-force decryptions, and unauthorized behaviors.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. AUTH VIEW (LOGIN / REGISTER) -->
+            <section id="viewAuth" class="view-section">
+                <div style="max-width: 440px; margin: 3rem auto;">
+                    <div class="cyber-card">
+                        <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                            <button id="tabBtnLogin" class="btn-cyber-outline" style="flex: 1;" onclick="switchAuthTab('login')">
+                                <i class="fa-solid fa-right-to-bracket"></i> Login
+                            </button>
+                            <button id="tabBtnRegister" class="btn-cyber-outline" style="flex: 1;" onclick="switchAuthTab('register')">
+                                <i class="fa-solid fa-user-plus"></i> Register
+                            </button>
+                        </div>
+
+                        <!-- Login Form -->
+                        <form id="formLogin" onsubmit="handleLogin(event)">
+                            <h2 style="font-size: 1.4rem; margin-bottom: 1.25rem; color: var(--text-bright);">System Authentication</h2>
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="loginUsername" class="form-control" placeholder="Enter username" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="btn-cyber" style="width: 100%; margin-top: 1rem;">
+                                <i class="fa-solid fa-shield-halved"></i> Authenticate & Enter
+                            </button>
+                        </form>
+
+                        <!-- Register Form -->
+                        <form id="formRegister" onsubmit="handleRegister(event)" style="display: none;">
+                            <h2 style="font-size: 1.4rem; margin-bottom: 1.25rem; color: var(--text-bright);">Create Secure Account</h2>
+                            <div class="form-group">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="regUsername" class="form-control" placeholder="Choose username" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" id="regEmail" class="form-control" placeholder="user@domain.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <input type="password" id="regPassword" class="form-control" placeholder="••••••••" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" id="regConfirmPassword" class="form-control" placeholder="••••••••" required>
+                            </div>
+                            <button type="submit" class="btn-cyber" style="width: 100%; margin-top: 1rem;">
+                                <i class="fa-solid fa-user-check"></i> Register Account
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. DASHBOARD VIEW -->
+            <section id="viewDashboard" class="view-section">
+                <!-- Stat Widgets Grid -->
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <div class="stat-val" id="statTotalUsers">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-file-shield"></i></div>
+                        <div>
+                            <div class="stat-val" id="statEncryptedFiles">0</div>
+                            <div class="stat-label">Files Encrypted</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-file-arrow-down"></i></div>
+                        <div>
+                            <div class="stat-val" id="statDecryptedFiles">0</div>
+                            <div class="stat-label">Files Decrypted</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+                        <div>
+                            <div class="stat-val" id="statNormalActs">0</div>
+                            <div class="stat-label">Normal Activities</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon yellow"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div>
+                            <div class="stat-val" id="statSuspiciousActs">0</div>
+                            <div class="stat-label">Suspicious Events</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red"><i class="fa-solid fa-bell"></i></div>
+                        <div>
+                            <div class="stat-val" id="statThreatAlerts">0</div>
+                            <div class="stat-label">Threat Alerts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Telemetry Charts Grid -->
+                <div class="charts-grid">
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa-solid fa-wave-square"></i> Real-Time Activity Telemetry</div>
+                        </div>
+                        <div style="height: 280px; position: relative;">
+                            <canvas id="chartActivityTimeline"></canvas>
+                        </div>
+                    </div>
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Security Threat Distribution</div>
+                        </div>
+                        <div style="height: 280px; position: relative;">
+                            <canvas id="chartThreatPie"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. ENCRYPT FILE VIEW -->
+            <section id="viewEncrypt" class="view-section">
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa-solid fa-lock"></i> Hybrid Encryption Suite (AES-256 + RSA-2048)</div>
+                        </div>
+
+                        <div class="upload-dropzone" id="dropzone" onclick="document.getElementById('fileInput').click()">
+                            <div class="dropzone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                            <h3 style="font-size: 1.2rem; color: var(--text-bright); margin-bottom: 0.5rem;">Select or Drag & Drop File</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem;" id="selectedFileText">Supports all file types (Documents, Images, Archives, Binary Data)</p>
+                            <input type="file" id="fileInput" style="display: none;" onchange="handleFileSelect(event)">
+                        </div>
+
+                        <div class="crypto-process-box" id="cryptoSteps" style="margin-top: 1.5rem;">
+                            <div class="process-step">
+                                <div class="step-icon"><i class="fa-solid fa-key"></i></div>
+                                <div>
+                                    <div class="step-title">1. AES-256 Symmetric Cipher</div>
+                                    <div class="step-desc">Generates random 256-bit secret key for fast file content encryption.</div>
+                                </div>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                                <div>
+                                    <div class="step-title">2. SHA-256 Integrity Checksum</div>
+                                    <div class="step-desc">Calculates cryptographic hash of original unencrypted payload.</div>
+                                </div>
+                            </div>
+                            <div class="process-step">
+                                <div class="step-icon"><i class="fa-solid fa-shield-cat"></i></div>
+                                <div>
+                                    <div class="step-title">3. RSA-2048 Envelope Protection</div>
+                                    <div class="step-desc">Encrypts the 256-bit AES secret key using RSA-2048 Public Key (OAEP).</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="btn-cyber" id="btnEncrypt" style="width: 100%; margin-top: 1.5rem;" onclick="executeEncryption()" disabled>
+                            <i class="fa-solid fa-lock"></i> Execute Hybrid Encryption
+                        </button>
+                    </div>
+
+                    <!-- Encryption Result Box -->
+                    <div class="cyber-card" id="encryptResultCard" style="display: none; border-color: var(--status-normal);">
+                        <div class="card-title" style="color: var(--status-normal);"><i class="fa-solid fa-circle-check"></i> File Encrypted Successfully</div>
+                        <div style="margin-top: 1rem; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.8;">
+                            <div><strong>Original File:</strong> <span id="resOriginalName"></span></div>
+                            <div><strong>Encrypted Payload:</strong> <span id="resEncName"></span></div>
+                            <div><strong>SHA-256 Hash:</strong> <span id="resShaHash" style="color: var(--accent-cyan);"></span></div>
+                            <div><strong>AES-256 Key Status:</strong> Wrapped in RSA-2048 OAEP Envelope ✅</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. DECRYPT FILE VIEW -->
+            <section id="viewDecrypt" class="view-section">
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fa-solid fa-unlock-keyhole"></i> Authorized Decryption & Integrity Verification</div>
+                        <button class="btn-cyber-outline" onclick="loadEncryptedFiles()"><i class="fa-solid fa-rotate"></i> Refresh Files</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Original Filename</th>
+                                    <th>SHA-256 Hash</th>
+                                    <th>Size</th>
+                                    <th>Encrypted Timestamp</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="filesTableBody">
+                                <tr>
+                                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                        Loading encrypted vault records...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Decryption Result Modal / Card -->
+                <div class="cyber-card" id="decryptResultCard" style="display: none; margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <div class="card-title" id="decCardTitle"><i class="fa-solid fa-shield-check"></i> Decryption Result</div>
+                        <span id="decStatusBadge" class="badge-threat badge-low">READY</span>
+                    </div>
+
+                    <div style="padding: 0.5rem 0;">
+                        <p style="font-size: 1.05rem; margin-bottom: 1rem;" id="decMessage"></p>
+                        <div style="background: rgba(13, 19, 34, 0.8); border: 1px solid var(--border-color); border-radius: 10px; padding: 1rem; font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.8;">
+                            <div><strong>Original SHA-256 Hash:</strong> <span id="decOriginalHash" style="color: var(--accent-cyan);"></span></div>
+                            <div><strong>Computed SHA-256 Hash:</strong> <span id="decComputedHash" style="color: var(--accent-cyan);"></span></div>
+                            <div><strong>AI Anomaly Score:</strong> <span id="decAnomalyScore"></span></div>
+                        </div>
+
+                        <div style="margin-top: 1.25rem; display: flex; gap: 1rem;">
+                            <a id="btnDownloadDecrypted" class="btn-cyber" href="#" style="display: none;" download>
+                                <i class="fa-solid fa-download"></i> Download Decrypted File
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. AI THREAT DETECTION VIEW -->
+            <section id="viewThreat" class="view-section">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa-solid fa-brain"></i> Machine Learning Anomaly Score</div>
+                        </div>
+                        <div style="text-align: center; padding: 1.5rem 0;">
+                            <div style="font-size: 3rem; font-weight: 800; font-family: var(--font-mono); color: var(--accent-cyan);" id="threatGaugeVal">-0.02</div>
+                            <div style="margin-top: 0.5rem;">
+                                <span class="badge-threat badge-low" id="threatClassificationBadge" style="font-size: 1rem; padding: 0.4rem 1.2rem;">
+                                    🟢 NORMAL BEHAVIOR
+                                </span>
+                            </div>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 1.25rem; line-height: 1.5;" id="threatExplanationText">
+                                User behavior aligns with normal operational patterns.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fa-solid fa-sliders"></i> Real-Time Feature Matrix</div>
+                        </div>
+                        <div style="font-family: var(--font-mono); font-size: 0.9rem; line-height: 2;">
+                            <div style="display: flex; justify-content: space-between;"><span>Failed Logins:</span> <strong id="featFailedLogins">0</strong></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Encryption Requests:</span> <strong id="featEncReqs">0</strong></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Decryption Requests:</span> <strong id="featDecReqs">0</strong></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Failed Decryptions:</span> <strong id="featFailedDec">0</strong></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Model Algorithm:</span> <strong style="color: var(--accent-cyan);">Isolation Forest</strong></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Demonstration Attack Simulator Panel -->
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fa-solid fa-flask-vial"></i> Viva Demonstration & Attack Simulator</div>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem;">
+                        Simulate anomalous cyber attacks to demonstrate how the Scikit-Learn Isolation Forest model classifies behavior and blocks high-risk requests.
+                    </p>
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                        <button class="btn-cyber btn-danger" onclick="triggerAttackSimulation('failed_decryptions')">
+                            <i class="fa-solid fa-bug"></i> Simulate Brute-Force Decryption Attack
+                        </button>
+                        <button class="btn-cyber btn-danger" onclick="triggerAttackSimulation('failed_logins')">
+                            <i class="fa-solid fa-user-ninja"></i> Simulate Credential Stuffing Attack
+                        </button>
+                        <button class="btn-cyber-outline" onclick="resetAttackSimulation()">
+                            <i class="fa-solid fa-rotate-left"></i> Reset to Normal Baseline
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. SECURITY LOGS VIEW -->
+            <section id="viewLogs" class="view-section">
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fa-solid fa-list-check"></i> Security Audit Logs</div>
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
+                            <input type="text" id="logSearchInput" class="form-control" style="width: 220px; padding: 0.5rem 0.8rem; font-size: 0.85rem;" placeholder="Search logs..." onkeyup="filterLogs()">
+                            <select id="logThreatFilter" class="form-control" style="width: 140px; padding: 0.5rem 0.8rem; font-size: 0.85rem;" onchange="filterLogs()">
+                                <option value="All">All Levels</option>
+                                <option value="Low">Low 🟢</option>
+                                <option value="Medium">Medium 🟡</option>
+                                <option value="High">High 🔴</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="cyber-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Activity Type</th>
+                                    <th>Status</th>
+                                    <th>Threat Level</th>
+                                    <th>Anomaly Score</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logsTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                        Loading security audit logs...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. CNS PROJECT INFO VIEW -->
+            <section id="viewInfo" class="view-section">
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fa-solid fa-graduation-cap"></i> Academic Project Documentation & Viva Reference</div>
+                    </div>
+                    <div style="line-height: 1.8; color: var(--text-main); font-size: 0.95rem;">
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">Why Hybrid Cryptography?</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+                            Symmetric encryption algorithms like <strong>AES-256</strong> are computationally fast and ideal for encrypting large files, but require secure key transmission. Asymmetric algorithms like <strong>RSA-2048</strong> provide secure key exchange using public/private key pairs, but are too slow for large files. <em>Hybrid Cryptography combines the speed of AES-256 with the key-protection security of RSA-2048.</em>
+                        </p>
+
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 0.5rem;">How Isolation Forest ML Detection Works</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 1.25rem;">
+                            <strong>Isolation Forest</strong> is an unsupervised machine learning algorithm that isolates anomalies by randomly partitioning feature space using decision trees. Because anomalous activity (e.g. repeated decryption failures or rapid automated requests) occurs infrequently and differs significantly from normal baseline activity, it requires fewer splits to isolate, resulting in a negative anomaly score.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Application JavaScript Bundle -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
