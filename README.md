@@ -26,7 +26,7 @@ A complete, production-grade cybersecurity web application that combines **Hybri
 Traditional symmetric file encryption systems face secret key distribution challenges, while public-key asymmetric algorithms are computationally too slow for bulk files. Furthermore, encrypted storage platforms often lack real-time behavior monitoring.
 
 This project solves both problems by:
-1. Combining **AES-256** (fast symmetric file encryption) with **RSA-2048** (secure asymmetric key envelope protection) and **SHA-256** checksum integrity verification.
+1. Combining **AES-256-GCM** (fast symmetric file encryption) with **RSA-2048 OAEP** (secure asymmetric key envelope protection) and **SHA-256** checksum integrity verification.
 2. Implementing an **Isolation Forest ML Model** that analyzes real-time user behavior (login failures, decryption frequencies, automated request bursts) to dynamically classify activity into 🟢 **NORMAL**, 🟡 **SUSPICIOUS**, or 🔴 **POTENTIAL THREAT**, blocking risky actions automatically.
 
 ---
@@ -99,16 +99,57 @@ This project solves both problems by:
 
 ---
 
+## 🔐 Hybrid Cryptography Mechanics
+
+The application utilizes a **hybrid cryptographic architecture** to achieve maximum data protection and performance efficiency:
+
+1. **Symmetric Payload Encryption (AES-256-GCM)**:
+   - File payload is encrypted using Galois/Counter Mode (GCM), providing both confidentiality and built-in message authentication (16-byte authentication tag).
+   - Each file encryption operation generates a unique random 256-bit (32-byte) AES secret key and a 96-bit (12-byte) Initialization Vector (IV).
+
+2. **Asymmetric Key Envelope Protection (RSA-2048 OAEP)**:
+   - The 256-bit AES key is encrypted using RSA-2048 with Optimal Asymmetrical Encryption Padding (OAEP) and SHA-256 digest function.
+   - The private key remains securely stored server-side (`uploads/keys/rsa_private.pem`) and is never exposed over API responses or client-side storage.
+
+3. **Cryptographic Checksum Verification (SHA-256)**:
+   - Prior to encryption, a SHA-256 digest (64-character hexadecimal fingerprint) of the raw file is computed and recorded.
+   - Upon decryption, a fresh SHA-256 digest of the unencrypted file payload is computed and compared against the original hash to confirm data integrity.
+
+---
+
+## 🤖 Machine Learning Threat Detection
+
+The system incorporates an **Isolation Forest (iForest)** unsupervised machine learning algorithm from `scikit-learn` to detect anomalous user behavior in real-time:
+
+### Feature Vector Specification
+For each incoming request (particularly decryption operations), the system collects a 5-dimensional feature vector:
+1. `failed_logins`: Count of recent failed authentication attempts.
+2. `encryption_requests`: Total encryption actions performed by the user session.
+3. `decryption_requests`: Total decryption actions requested.
+4. `failed_decryptions`: Count of consecutive failed or suspicious decryption requests.
+5. `access_frequency`: Rate of API calls per minute (detecting automated script bursts).
+
+### Classification & Anomaly Scoring
+The Isolation Forest isolates observations by randomly selecting a feature and splitting the value. Anomalies require fewer splits and isolate quickly:
+
+| Classification | Threat Level | Criteria / Anomaly Score Threshold | System Action |
+| :--- | :--- | :--- | :--- |
+| 🟢 **NORMAL** | Low | Score >= -0.05, typical user behavior | Operation Granted |
+| 🟡 **SUSPICIOUS** | Medium | Score < -0.05 or 1-2 failed attempts | Operation Allowed + Flagged in Audit Log |
+| 🔴 **POTENTIAL THREAT** | High | Score < -0.15 or >= 3 decryption failures | Operation Blocked 🚨 + Security Alert Logged |
+
+---
+
 ## 📁 Project Directory Structure
 
 ```
-hybrid-encryption-ai-threat-detection/
+ai-hybrid-file-encryption/
 ├── backend/
-│   ├── main.py              # FastAPI application router & endpoints
-│   ├── database.py          # SQLAlchemy SQLite database setup
+│   ├── main.py              # FastAPI application router & REST endpoints
+│   ├── database.py          # SQLAlchemy SQLite database session setup
 │   ├── models.py            # ORM Database Models (User, FileRecord, SecurityLog, UserActivity)
 │   ├── schemas.py           # Pydantic validation schemas
-│   ├── auth.py              # Password hashing & JWT authentication
+│   ├── auth.py              # Password hashing (PBKDF2/SHA256) & JWT authentication
 │   ├── encryption.py        # AES-256 + RSA-2048 + SHA-256 hybrid engine
 │   ├── decryption.py        # RSA unwrap + AES decrypt + integrity check
 │   ├── ai_detection.py      # Scikit-Learn IsolationForest threat detector
@@ -118,14 +159,14 @@ hybrid-encryption-ai-threat-detection/
 │   ├── css/
 │   │   └── style.css        # Dark cybersecurity design system
 │   └── js/
-│       └── app.js           # Client-side SPA router, API calls, Chart.js setup
+│       └── app.js           # Client-side SPA router, API calls, Chart.js telemetry
 ├── uploads/
-│   ├── encrypted_files/     # Encrypted payload files
-│   ├── decrypted_files/     # Decrypted download files
-│   └── keys/                # RSA public/private key store
+│   ├── encrypted_files/     # Encrypted payload storage
+│   ├── decrypted_files/     # Temporary decrypted download cache
+│   └── keys/                # Server-side RSA-2048 public/private key store
 ├── database/
 │   └── security.db          # SQLite database file
-├── requirements.txt         # Python dependencies
+├── requirements.txt         # Python dependencies manifest
 └── README.md                # Project documentation
 ```
 
@@ -134,7 +175,7 @@ hybrid-encryption-ai-threat-detection/
 ## ⚡ Installation & Running Locally
 
 ### 1. Prerequisites
-Ensure you have Python 3.10+ installed on your system.
+Ensure you have Python 3.10 or higher installed on your system.
 
 ### 2. Install Dependencies
 Navigate to the project root directory and run:
@@ -144,14 +185,14 @@ pip install -r requirements.txt
 ```
 
 ### 3. Start the FastAPI Server
-Launch the application using Uvicorn:
+Launch the application server using Uvicorn:
 
 ```bash
 uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 4. Access the Cyber Portal
-Open your web browser and navigate to:
+Open your browser and navigate to:
 ```
 http://127.0.0.1:8000
 ```
@@ -162,10 +203,12 @@ http://127.0.0.1:8000
 
 | Question | Answer |
 | :--- | :--- |
-| **Q1: Why is this called Hybrid Cryptography?** | **A:** Symmetric encryption (AES-256) is extremely fast for large files but hard to share keys securely. Asymmetric encryption (RSA-2048) is secure for key exchange but slow. Hybrid cryptography encrypts the file with AES-256 and then encrypts the AES key with RSA-2048. |
-| **Q2: What role does SHA-256 play?** | **A:** SHA-256 generates a unique 256-bit cryptographic fingerprint of the original file. When decrypting, a new hash is generated and compared against the original to ensure the file was not modified or corrupted. |
-| **Q3: How does the AI Threat Detection work?** | **A:** The system uses Scikit-Learn's `IsolationForest` algorithm. It monitors feature vectors (failed logins, decryption request counts, failed decryptions, request rates). Anomalous behaviors require fewer decision tree splits and yield negative anomaly scores, classifying activity into Normal, Suspicious, or Threat. |
-| **Q4: Where are the RSA keys generated?** | **A:** RSA-2048 key pairs are generated server-side using the Python `cryptography` library and stored securely in `uploads/keys/`. The private key is never exposed to the frontend browser. |
+| **Q1: Why use Hybrid Cryptography instead of RSA or AES alone?** | **A:** AES-256 (symmetric) is extremely fast for bulk file encryption but requires secure key sharing. RSA-2048 (asymmetric) provides secure key exchange without sharing private keys, but is computationally too slow for large files. Hybrid cryptography encrypts the file with AES-256 and wraps the AES key with RSA-2048, combining high performance with secure key distribution. |
+| **Q2: How does SHA-256 verify file integrity?** | **A:** SHA-256 generates a unique 256-bit (64-character hex) cryptographic hash of the raw file content prior to encryption. During decryption, a new SHA-256 hash is computed on the restored file and compared with the original hash. Any discrepancy indicates bit rot, tampering, or corrupted decryption. |
+| **Q3: Why choose Isolation Forest for Threat Detection?** | **A:** Isolation Forest is an unsupervised machine learning algorithm specifically designed for anomaly detection. Unlike traditional algorithms that build profiles of normal behavior, Isolation Forest explicitly isolates anomalies by building random decision trees. Because anomalous behavior (burst requests, high failure rates) is rare and distinct, it requires fewer tree splits to isolate, producing negative anomaly scores efficiently. |
+| **Q4: How are RSA private keys protected?** | **A:** RSA private keys are stored exclusively server-side in the `uploads/keys/` directory using standard PEM format (PKCS#8). The private key is never transmitted over API endpoints, transmitted to the client, or stored in frontend browser memory. |
+| **Q5: What mode of AES is used and why?** | **A:** The system uses **AES-256-GCM** (Galois/Counter Mode). GCM provides Authenticated Encryption with Associated Data (AEAD), ensuring both data confidentiality and authenticity (via a 16-byte authentication tag), preventing cipher-text manipulation attacks. |
+| **Q6: How does the live Viva Demonstration Attack Simulator work?** | **A:** The attack simulator allows evaluators to simulate brute-force decryption attacks, invalid key attempts, or automated request bursts. The background Isolation Forest threat engine intercepts these activities, recalculates feature anomaly scores, triggers real-time visual alert telemetry, and automatically blocks unauthorized file access. |
 
 ---
 
