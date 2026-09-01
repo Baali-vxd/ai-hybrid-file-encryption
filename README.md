@@ -16,7 +16,6 @@ A complete, production-grade cybersecurity web application that combines **Hybri
 - [Machine Learning Threat Detection](#-machine-learning-threat-detection)
 - [Project Directory Structure](#-project-directory-structure)
 - [Installation & Running Locally](#-installation--running-locally)
-- [Viva Voce Q&A Preparation](#-viva-voce-qa-preparation)
 - [Future Improvements](#-future-improvements)
 
 ---
@@ -196,19 +195,6 @@ Open your browser and navigate to:
 ```
 http://127.0.0.1:8000
 ```
-
----
-
-## 🎓 Viva Voce Q&A Preparation
-
-| Question | Answer |
-| :--- | :--- |
-| **Q1: Why use Hybrid Cryptography instead of RSA or AES alone?** | **A:** AES-256 (symmetric) is extremely fast for bulk file encryption but requires secure key sharing. RSA-2048 (asymmetric) provides secure key exchange without sharing private keys, but is computationally too slow for large files. Hybrid cryptography encrypts the file with AES-256 and wraps the AES key with RSA-2048, combining high performance with secure key distribution. |
-| **Q2: How does SHA-256 verify file integrity?** | **A:** SHA-256 generates a unique 256-bit (64-character hex) cryptographic hash of the raw file content prior to encryption. During decryption, a new SHA-256 hash is computed on the restored file and compared with the original hash. Any discrepancy indicates bit rot, tampering, or corrupted decryption. |
-| **Q3: Why choose Isolation Forest for Threat Detection?** | **A:** Isolation Forest is an unsupervised machine learning algorithm specifically designed for anomaly detection. Unlike traditional algorithms that build profiles of normal behavior, Isolation Forest explicitly isolates anomalies by building random decision trees. Because anomalous behavior (burst requests, high failure rates) is rare and distinct, it requires fewer tree splits to isolate, producing negative anomaly scores efficiently. |
-| **Q4: How are RSA private keys protected?** | **A:** RSA private keys are stored exclusively server-side in the `uploads/keys/` directory using standard PEM format (PKCS#8). The private key is never transmitted over API endpoints, transmitted to the client, or stored in frontend browser memory. |
-| **Q5: What mode of AES is used and why?** | **A:** The system uses **AES-256-GCM** (Galois/Counter Mode). GCM provides Authenticated Encryption with Associated Data (AEAD), ensuring both data confidentiality and authenticity (via a 16-byte authentication tag), preventing cipher-text manipulation attacks. |
-| **Q6: How does the live Viva Demonstration Attack Simulator work?** | **A:** The attack simulator allows evaluators to simulate brute-force decryption attacks, invalid key attempts, or automated request bursts. The background Isolation Forest threat engine intercepts these activities, recalculates feature anomaly scores, triggers real-time visual alert telemetry, and automatically blocks unauthorized file access. |
 
 ---
 
