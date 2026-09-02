@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: hybrid-backend
+    environment:
+      - APP_ENV=docker
+      - DATABASE_URL=postgresql+psycopg://app:password@db:5432/hybrid_security
+      - JWT_SECRET=super-secret-cns-project-jwt-key-change-in-production-2026
+      - RSA_PRIVATE_KEY_PATH=/app/uploads/keys/rsa_private.pem
+      - RSA_PUBLIC_KEY_PATH=/app/uploads/keys/rsa_public.pem
+      - CORS_ORIGINS=http://localhost:8080,http://127.0.0.1:8080,http://localhost:8000
+    volumes:
+      - encrypted_storage:/app/uploads/encrypted_files
+      - rsa_keys:/app/uploads/keys
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: hybrid-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:16-alpine
+    container_name: hybrid-postgres
+    environment:
+      - POSTGRES_DB=hybrid_security
+      - POSTGRES_USER=app
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d hybrid_security"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
+  encrypted_storage:
+  rsa_keys:
