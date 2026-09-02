@@ -203,3 +203,4 @@ http://127.0.0.1:8000
 1. **Hardware Security Module (HSM) Integration**: Storing RSA private keys in hardware modules or cloud key vaults (AWS KMS / Azure Key Vault).
 2. **Multi-Factor Authentication (MFA)**: TOTP authenticator integration for sensitive decryption actions.
 3. **Advanced ML Features**: Incorporating IP geolocation anomaly detection and time-series LSTM models for continuous behavioral monitoring.
+
