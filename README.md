@@ -1,6 +1,6 @@
 # AI-Enabled Hybrid File Encryption and Intelligent Threat Detection System
 
-> **Computer Networks and Security (CNS) Academic Mini Project**
+> **Cryptography and Network Security (CNS) Academic Mini Project**
 
 A complete, production-grade cybersecurity web application that combines **Hybrid Cryptography (AES-256 + RSA-2048)**, **SHA-256 Integrity Verification**, and **Machine Learning Anomaly Detection (Scikit-Learn Isolation Forest)** to secure sensitive files against unauthorized access and cyber threats.
 
