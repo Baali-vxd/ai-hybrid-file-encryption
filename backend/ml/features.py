@@ -21,10 +21,13 @@ def extract_feature_vector(activity: UserActivity) -> Dict[str, Any]:
         }
 
     # Calculate access frequency rate
-    time_diff = (datetime.datetime.utcnow() - (activity.last_access_timestamp or datetime.datetime.utcnow())).total_seconds()
-    minutes = max(time_diff / 60.0, 0.1)
     total_reqs = activity.encryption_requests + activity.decryption_requests + activity.login_attempts
-    access_freq = round(total_reqs / minutes, 2)
+    if total_reqs == 0:
+        access_freq = 1.0
+    else:
+        time_diff = (datetime.datetime.utcnow() - (activity.last_access_timestamp or datetime.datetime.utcnow())).total_seconds()
+        minutes = max(time_diff / 60.0, 1.0)
+        access_freq = round(total_reqs / minutes, 2)
 
     return {
         "failed_logins": activity.failed_logins,

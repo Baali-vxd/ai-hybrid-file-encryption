@@ -82,11 +82,12 @@ def reset_user_simulation(db: Session, user: User) -> dict:
     """Reset user activity counters to baseline state."""
     activity = db.query(UserActivity).filter(UserActivity.user_id == user.id).first()
     if activity:
+        activity.login_attempts = 0
         activity.failed_logins = 0
         activity.failed_decryptions = 0
         activity.decryption_requests = 0
         activity.encryption_requests = 0
-        activity.last_access_timestamp = datetime.datetime.utcnow()
+        activity.last_access_timestamp = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
         db.commit()
 
     log_security_event(
