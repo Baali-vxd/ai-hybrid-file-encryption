@@ -187,7 +187,7 @@ pip install -r requirements.txt
 Launch the application server using Uvicorn:
 
 ```bash
-uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ### 4. Access the Cyber Portal
